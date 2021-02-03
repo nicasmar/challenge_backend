@@ -3,18 +3,6 @@ const {
   hashPassword, comparePassword, createToken,
 } = require('../../lib/auth')
 
-const updatePass = async (obj, { id, password }) => {
-  const user = await User.query().findById(id)
-  if (!user) {
-    throw new Error('User does not exist')
-  }
-  const passwordHash = await hashPassword(password)
-  const update = await User.query().findById(id).patch({
-    password: passwordHash,
-  }).returning('*')
-  return update
-}
-
 const login = async (obj, { email, password }) => {
   const user = await User.query().findOne({
     email,
@@ -28,8 +16,6 @@ const login = async (obj, { email, password }) => {
     throw new Error('Invalid email or password')
   }
 
-
-  // If successful login, set authentication information
   const payload = {
     id: user.id,
   }
@@ -40,15 +26,9 @@ const login = async (obj, { email, password }) => {
 
 const register = async (obj, {
   input: {
-    username, email, password, age,
+    username, email, password,
   },
 }) => {
-  if (!age) {
-    throw new Error('Please enter a valid age')
-  }
-  if (age < 16) {
-    throw new Error('Must be 16+ to register')
-  }
   if (password === '' || username === '' || email === '') {
     throw new Error('Cannot leave blank fields')
   }
@@ -66,7 +46,6 @@ const register = async (obj, {
     email,
     username,
     password: passwordHash,
-    age,
   }).returning('*')
 
   // If successful registration, set authentication information
@@ -80,7 +59,7 @@ const register = async (obj, {
 }
 
 const resolver = {
-  Mutation: { login, register, updatePass },
+  Mutation: { login, register },
 }
 
 module.exports = resolver
