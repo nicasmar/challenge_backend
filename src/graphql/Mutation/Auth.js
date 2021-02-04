@@ -3,6 +3,18 @@ const {
   hashPassword, comparePassword, createToken,
 } = require('../../lib/auth')
 
+const updatePass = async (obj, { id, password }) => {
+  const user = await User.query().findById(id)
+  if (!user) {
+    throw new Error('User does not exist')
+  }
+  const passwordHash = await hashPassword(password)
+  const update = await User.query().findById(id).patch({
+    password: passwordHash,
+  }).returning('*')
+  return update
+}
+
 const login = async (obj, { email, password }) => {
   const user = await User.query().findOne({
     email,
@@ -59,7 +71,7 @@ const register = async (obj, {
 }
 
 const resolver = {
-  Mutation: { login, register },
+  Mutation: { login, register, updatePass },
 }
 
 module.exports = resolver
