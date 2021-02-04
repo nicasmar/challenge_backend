@@ -20,6 +20,8 @@ exports.up = async knex => createTableIfNotExists(knex, 'users', table => {
   table.string('password').notNullable()
 
   table.timestamp('dateJoined').defaultTo(knex.fn.now())
+  table.string('city')
+  table.string('vaccine')
 })
 
 exports.down = async knex => knex.schema.dropTableIfExists('users')

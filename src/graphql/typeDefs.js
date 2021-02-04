@@ -18,6 +18,8 @@ module.exports = gql`
     password: String!
     email: String!
     dateJoined: String!
+    city: String
+    vaccine: String
   }
 
   type AuthReturn {

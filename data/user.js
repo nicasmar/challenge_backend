@@ -9,6 +9,8 @@ casual.define('user', () => ({
   username: casual.username,
   password,
   dateJoined: casual.moment,
+  city: casual.city,
+  vaccine: casual.random_element(['Moderna', 'Phizer']),
 }))
 
 const userData = []
